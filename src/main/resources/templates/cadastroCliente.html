@@ -5,9 +5,11 @@
 </head>
 <body>
 
-<main id="content" class="d-flex justify-content-center align-items-center" style="min-height: 100vh">
-    <div style="width: 22rem">
-        <form method="post" th:action="@{/auth/cadastro}">
+<main id="content" >
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 90vh">
+    <div class="text-center">
+        <img src="/assets/img/logos/2.png" alt="Logo" class="mb-2 me-2 mb-md-0" width="250px" height="180px">
+        <form method="post" th:action="@{/auth/cadastro}" style="width: 22rem; margin-bottom: 10px;">
             <h1 class="h3 mb-3 fw-normal text-center">Cadastre-se | GoService</h1>
 
             <div th:if="${successMessage != null}" th:text="${successMessage}" class="alert alert-success" role="alert"></div>
@@ -39,6 +41,7 @@
                 Página Principal <i class="bi bi-house-fill ms-2"></i>
             </a>
         </div>
+    </div>
     </div>
     <script defer>
         const btnConfirm = document.querySelector("#btn-confirm");

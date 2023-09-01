@@ -5,9 +5,11 @@
 </head>
 <body>
 
-<main id="content" class="d-flex justify-content-center align-items-center" style="min-height: 100vh">
-    <div style="width: 22rem">
-        <form method="post" th:action="@{/auth/login}">
+<main id="content">
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh">
+        <div class="text-center">
+            <img src="/assets/img/logos/2.png" alt="Logo" class="mb-3 me-2 mb-md-0" width="250px" height="180px">
+            <form method="post" th:action="@{/auth/login}" style="width: 22rem">
             <h1 class="h3 mb-3 fw-normal text-center">Login | GoService</h1>
 
             <div th:if="${successMessage != null}" th:text="${successMessage}" class="alert alert-success" role="alert"></div>
@@ -30,6 +32,7 @@
             <a href="/" class="btn btn-light btn-sm text-primary flex-grow-1">
                 Página Principal <i class="bi bi-house-fill ms-2"></i>
             </a>
+        </div>
         </div>
     </div>
 </main>
