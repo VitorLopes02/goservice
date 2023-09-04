@@ -1,9 +1,6 @@
 package com.soulcode.goserviceapp.service;
 
-import com.soulcode.goserviceapp.domain.Agendamento;
-import com.soulcode.goserviceapp.domain.Cliente;
-import com.soulcode.goserviceapp.domain.Prestador;
-import com.soulcode.goserviceapp.domain.Servico;
+import com.soulcode.goserviceapp.domain.*;
 import com.soulcode.goserviceapp.domain.enums.StatusAgendamento;
 import com.soulcode.goserviceapp.repository.AgendamentoRepository;
 import com.soulcode.goserviceapp.service.exceptions.AgendamentoNaoEncontradoException;
@@ -15,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +29,10 @@ public class AgendamentoService {
 
     @Autowired
     private PrestadorService prestadorService;
+
+    public List<Agendamento> findByData(String dataInicio, String dataFim) {
+        return agendamentoRepository.findByData(dataInicio, dataFim);
+    }
 
     public Agendamento findById(Long id){
         Optional<Agendamento> agendamento = agendamentoRepository.findById(id);
@@ -110,4 +112,5 @@ public class AgendamentoService {
         }
         throw new StatusAgendamentoImutavelException();
     }
+
 }
