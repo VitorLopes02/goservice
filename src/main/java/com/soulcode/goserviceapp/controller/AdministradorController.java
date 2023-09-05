@@ -8,8 +8,13 @@ import com.soulcode.goserviceapp.service.UsuarioLogService;
 import com.soulcode.goserviceapp.service.UsuarioService;
 import com.soulcode.goserviceapp.service.exceptions.ServicoNaoEncontradoException;
 import com.soulcode.goserviceapp.service.exceptions.UsuarioNaoEncontradoException;
+import org.hibernate.service.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -29,12 +34,18 @@ public class AdministradorController {
     @Autowired
     private UsuarioLogService usuarioLogService;
 
-    @GetMapping(value = "/servicos")
-    public ModelAndView servicos() {
+    @GetMapping("/servicos")
+    public ModelAndView getServices(@RequestParam(defaultValue = "0") int page) {
         ModelAndView mv = new ModelAndView("servicosAdmin");
         try {
-            List<Servico> servicos = servicoService.findAll();
+            int pageSize = 10;
+            Pageable pageable = PageRequest.of(page, pageSize);
+            Page<Servico> servicePage = servicoService.findNumbServicos(pageable);
+            List<Servico> servicos = servicePage.getContent();
+            Integer totalPages = servicePage.getTotalPages();
             mv.addObject("servicos", servicos);
+            mv.addObject("currentPage", page);
+            mv.addObject("totalPage", totalPages);
         } catch (Exception ex) {
             mv.addObject("errorMessage", "Erro ao buscar dados de serviços.");
         }
