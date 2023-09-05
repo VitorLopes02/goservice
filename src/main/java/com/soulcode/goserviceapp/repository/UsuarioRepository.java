@@ -2,6 +2,8 @@ package com.soulcode.goserviceapp.repository;
 
 import com.soulcode.goserviceapp.domain.Servico;
 import com.soulcode.goserviceapp.domain.Usuario;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -28,4 +30,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     @Query("SELECT s FROM Servico s WHERE LOWER(s.nome) LIKE LOWER(CONCAT('%', :nome, '%'))")
     List<Servico> buscarServicosPorNome(String nome);
+
+    @Query(value = "SELECT * FROM usuarios", countQuery = "SELECT COUNT(*) usuarios", nativeQuery = true)
+    Page<Usuario> findAll(Pageable pageable);
 }
