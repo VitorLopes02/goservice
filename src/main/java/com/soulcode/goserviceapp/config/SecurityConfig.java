@@ -12,7 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final String[] PUBLIC_ROUTES = {"/", "/home", "/auth/**", "/css/**", "/js/**", "/assets/**", "/api/**", "/faq/**", "/aceite/**"};
+    private final String[] PUBLIC_ROUTES = {"/", "/home", "/auth/**", "/css/**", "/js/**", "/assets/**", "/api/**", "/footer/**", "/aceite/**"};
 
     @Bean
     public PasswordEncoder passwordEncoder() {
