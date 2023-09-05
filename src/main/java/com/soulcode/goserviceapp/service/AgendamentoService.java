@@ -5,10 +5,12 @@ import com.soulcode.goserviceapp.domain.enums.StatusAgendamento;
 import com.soulcode.goserviceapp.repository.AgendamentoRepository;
 import com.soulcode.goserviceapp.service.exceptions.AgendamentoNaoEncontradoException;
 import com.soulcode.goserviceapp.service.exceptions.StatusAgendamentoImutavelException;
+import com.soulcode.goserviceapp.service.exceptions.ConflitoHorarioException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -49,17 +51,33 @@ public class AgendamentoService {
         Cliente cliente = clienteService.findAuthenticated(authentication);
         Prestador prestador = prestadorService.findById(prestadorId);
         Servico servico = servicoService.findById(servicoId);
-        Agendamento agendamento = new Agendamento();
-        agendamento.setCliente(cliente);
-        agendamento.setPrestador(prestador);
-        agendamento.setServico(servico);
-        agendamento.setData(data);
-        agendamento.setHora(hora);
-
-        Agendamento agendamento1 = agendamentoRepository.save(agendamento);
-        agendamentoLog(agendamento1);
-        return agendamento1;
+// horario
+        if (isHorarioDisponivel(prestador, data, hora)) {
+            Agendamento agendamento = new Agendamento();
+            agendamento.setCliente(cliente);
+            agendamento.setPrestador(prestador);
+            agendamento.setServico(servico);
+            agendamento.setData(data);
+            agendamento.setHora(hora);
+            return agendamentoRepository.save(agendamento);
+        } else {
+            throw new ConflitoHorarioException("Indisponível: O prestador já possui um agendamento nesse horário.");
+        }
     }
+
+    public boolean isHorarioDisponivel(Prestador prestador, LocalDate data, LocalTime hora) {
+        Long prestadorId = prestador.getId();
+        List<Agendamento> agendamentos = agendamentoRepository.findByPrestadorAndData(prestadorId, data);
+
+        for(Agendamento agendamento : agendamentos) {
+            if(agendamento.getHora().equals(hora)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
     @Cacheable(cacheNames = "redisCache")
     public List<Agendamento> findByCliente(Authentication authentication){
         System.err.println("BUSCANDO AGENDAMENTOS CLIENTE NO BANCO...");
@@ -130,5 +148,7 @@ public class AgendamentoService {
         }
         throw new StatusAgendamentoImutavelException();
     }
+
+
 
 }

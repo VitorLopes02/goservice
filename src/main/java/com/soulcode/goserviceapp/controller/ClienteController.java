@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -91,13 +92,27 @@ public class ClienteController {
             @RequestParam(name = "hora") LocalTime hora,
             Authentication authentication,
             RedirectAttributes attributes) {
+
         try {
+            Prestador prestador = prestadorService.findById(prestadorId);
+            LocalDateTime dataHoraAgendamento = LocalDateTime.of(data, hora);
+            LocalDateTime dataHoraAtual = LocalDateTime.now();
+
+            if(!agendamentoService.isHorarioDisponivel(prestador, data, hora)) {
+                throw new ConflitoHorarioException("Indisponível: O prestador já possui um agendamento nesse horário.");
+            }
+
+            if(dataHoraAgendamento.isBefore(dataHoraAtual)) {
+                throw new DataHoraInvalidaException("Indisponível: Data e hora selecionadas são anteriores ao momento atual.");
+            }
             agendamentoService.create(authentication, servicoId, prestadorId, data, hora);
             attributes.addFlashAttribute("successMessage", "Agendamento realizado com sucesso. Aguardando confirmação.");
         } catch (UsuarioNaoAutenticadoException | UsuarioNaoEncontradoException | ServicoNaoEncontradoException ex) {
             attributes.addFlashAttribute("errorMessage", ex.getMessage());
         } catch (Exception ex) {
-            attributes.addFlashAttribute("errorMessage", "Erro ao finalizar agendamento.");
+            attributes.addFlashAttribute("errorMessage", "Indisponível: O prestador já possui um agendamento nesse horário.");
+        } catch (DataHoraInvalidaException e) {
+            throw new RuntimeException(e);
         }
         return "redirect:/cliente/historico";
     }
