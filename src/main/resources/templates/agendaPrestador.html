@@ -44,8 +44,12 @@
                         <th>Confirmar</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:if="not ${busca_agendamento}" th:each="agendamento : ${agendamentos}">
+                    <tr th:each="agendamento : ${agendamentos}">
+                        <!--<td ><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" th:text="${agendamento.cliente.nome}"></button></td>-->
+                    <tr th:each="agendamento : ${agendamentos}">
+                        <td class=" fw-medium text-primary botao-abrir-especificacoes"  style="cursor: pointer; " data-bs-toggle="modal"  th:data-bs-target="'#prestadorInfo' + ${agendamento?.id}">
+                            <span th:text="${agendamento.cliente.nome}" class=" mr-1 "> </span>
+                            <i class="bi bi-clipboard "></i>
                         <td th:text="${agendamento.cliente.nome}"></td>
                         <td th:text="${agendamento.servico.nome}"></td>
                         <td th:text="${agendamento.data}"></td>
@@ -124,7 +128,28 @@
             </div>
         </div>
     </div>
-
+    <!-- Modal  informações cliente-->
+    <div th:each="agendamento : ${agendamentos}" >
+        <div class="modal fade" th:id="'prestadorInfo' + ${agendamento?.id}" tabindex="-1" role="dialog" aria-labelledby="infoPrestadorModal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Informações do prestador</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Nome: <strong th:text="${agendamento.cliente.nome}"></strong></p>
+                        <p>Email: <strong th:text="${agendamento.cliente.email}"></strong></p>
+                        <p>Telefone: <strong th:text="${agendamento.cliente?.telefone}"></strong></p>
+                        <p>Data de Nascimento: <strong th:text="${agendamento.cliente?.dataNascimento}"></strong></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div th:replace="fragments/footer :: footer"></div>
 
 </div>
