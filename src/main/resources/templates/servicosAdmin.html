@@ -54,6 +54,19 @@
             <div class="card-body">
                 <h5 class="card-title mb-2">Serviços cadastrados</h5>
 
+                <form class="row" method="post" th:action="@{/admin/servicos/pesquisa}">
+                    <div class="col">
+                        <label for="nome-servico">Nome do Serviço</label>
+                        <input class="form-control" type="text" name="nome-servico" id="nome-servico" required>
+                    </div>
+                    <div class="col d-flex flex-column-reverse">
+                        <button type="submit" class="btn btn-primary align-bottom">Buscar <i class="bi bi-search"></i></button>
+                    </div>
+                    <div class="col d-flex flex-column-reverse">
+                        <a th:href="@{/admin/servicos}" class="btn btn-secondary align-bottom">Todos os serviços</a>
+                    </div>
+                </form>
+
                 <table class="table w-100">
                     <thead>
                     <tr>

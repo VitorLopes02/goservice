@@ -88,6 +88,20 @@ public class AdministradorController {
         return mv;
     }
 
+    @PostMapping(value = "/servicos/pesquisa")
+    public ModelAndView searchServico(@RequestParam(name = "nome-servico")String nome){
+        ModelAndView mv = new ModelAndView("servicosAdmin");
+        try {
+            List<Servico> buscaServico = usuarioService.buscarServicosPorNome(nome);
+            mv.addObject("servicos", buscaServico);
+        }catch (ServicoNaoEncontradoException ex){
+            mv.addObject("errorMessage", ex.getMessage());
+        }catch (Exception ex){
+            mv.addObject("errorMessage", "Serviço não encontrado.");
+        }
+        return mv;
+    }
+
     @PostMapping(value = "/servicos/editar")
     public String updateService(Servico servico, RedirectAttributes attributes) {
         try {
