@@ -4,6 +4,8 @@ import com.soulcode.goserviceapp.domain.*;
 import com.soulcode.goserviceapp.repository.UsuarioRepository;
 import com.soulcode.goserviceapp.service.exceptions.UsuarioNaoEncontradoException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,10 @@ public class UsuarioService {
 
     public List<Object[]> getUsuarioPerfil(){
         return usuarioRepository.contaUsuarioPorPerfil();
+    }
+
+    public Page<Usuario> findNumbUsuarios(Pageable pageable){
+        return usuarioRepository.findAll(pageable);
     }
 
     public Usuario findById(Long id){
