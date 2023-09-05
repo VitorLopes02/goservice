@@ -79,6 +79,30 @@
                     </tr>
                     </tbody>
                 </table>
+
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item" th:if="${currentPage > 0}">
+                            <a class="page-link" th:href="@{/admin/usuarios(page=0)}" aria-label="Primeira página">
+                                <span aria-hidden="true">&laquo;&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/admin/usuarios(page=0)}">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/admin/usuarios(page=1)}">2</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/admin/usuarios(page=2)}">3</a>
+                        </li>
+                        <li class="page-item" th:if="${currentPage < totalPages}">
+                            <a class="page-link" th:href="@{/admin/usuarios(page=4)}" aria-label="Última página">
+                                <span aria-hidden="true">&raquo;&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </main>
