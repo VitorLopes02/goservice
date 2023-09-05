@@ -1,9 +1,8 @@
 package com.soulcode.goserviceapp.controller;
 
-import com.soulcode.goserviceapp.domain.Agendamento;
-import com.soulcode.goserviceapp.domain.Prestador;
-import com.soulcode.goserviceapp.domain.Servico;
+import com.soulcode.goserviceapp.domain.*;
 import com.soulcode.goserviceapp.service.AgendamentoService;
+import com.soulcode.goserviceapp.service.EnderecoService;
 import com.soulcode.goserviceapp.service.PrestadorService;
 import com.soulcode.goserviceapp.service.ServicoService;
 import com.soulcode.goserviceapp.service.exceptions.*;
@@ -33,6 +32,9 @@ public class PrestadorController {
     @Autowired
     private AgendamentoService agendamentoService;
 
+    @Autowired
+    private EnderecoService enderecoService;
+
     @GetMapping(value = "/dados")
     public ModelAndView dados(Authentication authentication) {
         ModelAndView mv = new ModelAndView("dadosPrestador");
@@ -52,9 +54,17 @@ public class PrestadorController {
     }
 
     @PostMapping(value = "/dados")
-    public String editarDados(Prestador prestador, RedirectAttributes attributes) {
+    public String alterarDados(
+            @RequestParam(value = "prestador", required = false) Prestador prestador,
+            @RequestParam(value = "endereco", required = false) Endereco endereco,
+            RedirectAttributes attributes) {
         try {
-            prestadorService.update(prestador);
+            if (prestador != null) {
+                prestadorService.update(prestador);
+            }
+            if (endereco != null) {
+                enderecoService.update(endereco);
+            }
             attributes.addFlashAttribute("successMessage", "Dados alterados.");
         } catch (UsuarioNaoEncontradoException ex) {
             attributes.addFlashAttribute("errorMessage", ex.getMessage());
