@@ -1,5 +1,6 @@
 package com.soulcode.goserviceapp.repository;
 
+import com.soulcode.goserviceapp.domain.Servico;
 import com.soulcode.goserviceapp.domain.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -24,4 +25,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     @Query(value = "SELECT u.perfil AS perfil, COUNT(u) AS quantidade FROM Usuario u GROUP BY u.perfil")
     List<Object[]> contaUsuarioPorPerfil();
+
+    @Query("SELECT s FROM Servico s WHERE LOWER(s.nome) LIKE LOWER(CONCAT('%', :nome, '%'))")
+    List<Servico> buscarServicosPorNome(String nome);
 }
