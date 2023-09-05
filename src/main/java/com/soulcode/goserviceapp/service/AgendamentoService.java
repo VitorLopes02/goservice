@@ -30,6 +30,9 @@ public class AgendamentoService {
     @Autowired
     private PrestadorService prestadorService;
 
+    @Autowired
+    private AgendamentoLogService agendamentoLogService;
+
     public List<Agendamento> findByData(String dataInicio, String dataFim) {
         return agendamentoRepository.findByData(dataInicio, dataFim);
     }
@@ -53,7 +56,9 @@ public class AgendamentoService {
         agendamento.setData(data);
         agendamento.setHora(hora);
 
-        return agendamentoRepository.save(agendamento);
+        Agendamento agendamento1 = agendamentoRepository.save(agendamento);
+        agendamentoLog(agendamento1);
+        return agendamento1;
     }
     @Cacheable(cacheNames = "redisCache")
     public List<Agendamento> findByCliente(Authentication authentication){
@@ -69,12 +74,22 @@ public class AgendamentoService {
         return  agendamentoRepository.findByPrestadorEmail(prestador.getEmail());
     }
 
+    public void agendamentoLog(Agendamento agendamento) {
+        try {
+            AgendamentoLog agendamentoLog = new AgendamentoLog(agendamento);
+            agendamentoLogService.create(agendamentoLog);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void cancelAgendaPrestador(Authentication authentication, Long id){
         Prestador prestador = prestadorService.findAuthenticated(authentication);
         Agendamento agendamento = findById(id);
         if(agendamento.getStatusAgendamento().equals(StatusAgendamento.AGUARDANDO_CONFIRMACAO)){
             agendamento.setStatusAgendamento(StatusAgendamento.CANCELADO_PELO_PRESTADOR);
-            agendamentoRepository.save(agendamento);
+            Agendamento agendamento1 = agendamentoRepository.save(agendamento);
+            agendamentoLog(agendamento1);
             return;
         }
         throw new StatusAgendamentoImutavelException();
@@ -85,7 +100,8 @@ public class AgendamentoService {
         Agendamento agendamento = findById(id);
         if(agendamento.getStatusAgendamento().equals(StatusAgendamento.AGUARDANDO_CONFIRMACAO)){
             agendamento.setStatusAgendamento(StatusAgendamento.CONFIRMADO);
-            agendamentoRepository.save(agendamento);
+            Agendamento agendamento1 = agendamentoRepository.save(agendamento);
+            agendamentoLog(agendamento1);
             return;
         }
         throw new StatusAgendamentoImutavelException();
@@ -96,7 +112,8 @@ public class AgendamentoService {
         Agendamento agendamento = findById(id);
         if (agendamento.getStatusAgendamento().equals(StatusAgendamento.AGUARDANDO_CONFIRMACAO)){
             agendamento.setStatusAgendamento(StatusAgendamento.CANCELADO_PELO_CLIENTE);
-            agendamentoRepository.save(agendamento);
+            Agendamento agendamento1 = agendamentoRepository.save(agendamento);
+            agendamentoLog(agendamento1);
             return;
         }
         throw new StatusAgendamentoImutavelException();
@@ -107,7 +124,8 @@ public class AgendamentoService {
         Agendamento agendamento = findById(id);
         if (agendamento.getStatusAgendamento().equals(StatusAgendamento.CONFIRMADO)){
             agendamento.setStatusAgendamento(StatusAgendamento.CONCLUIDO);
-            agendamentoRepository.save(agendamento);
+            Agendamento agendamento1 = agendamentoRepository.save(agendamento);
+            agendamentoLog(agendamento1);
             return;
         }
         throw new StatusAgendamentoImutavelException();
