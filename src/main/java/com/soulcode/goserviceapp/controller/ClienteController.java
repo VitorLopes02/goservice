@@ -1,13 +1,7 @@
 package com.soulcode.goserviceapp.controller;
 
-import com.soulcode.goserviceapp.domain.Agendamento;
-import com.soulcode.goserviceapp.domain.Cliente;
-import com.soulcode.goserviceapp.domain.Prestador;
-import com.soulcode.goserviceapp.domain.Servico;
-import com.soulcode.goserviceapp.service.AgendamentoService;
-import com.soulcode.goserviceapp.service.ClienteService;
-import com.soulcode.goserviceapp.service.PrestadorService;
-import com.soulcode.goserviceapp.service.ServicoService;
+import com.soulcode.goserviceapp.domain.*;
+import com.soulcode.goserviceapp.service.*;
 import com.soulcode.goserviceapp.service.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -40,6 +34,10 @@ public class ClienteController {
     @Autowired
     private AgendamentoService agendamentoService;
 
+    @Autowired
+    private EnderecoService enderecoService;
+
+
     @GetMapping(value = "/dados")
     public ModelAndView dados(Authentication authentication) {
         ModelAndView mv = new ModelAndView("dadosCliente");
@@ -55,9 +53,17 @@ public class ClienteController {
     }
 
     @PostMapping(value = "/dados")
-    public String alterarDados(Cliente cliente, RedirectAttributes attributes) {
+    public String alterarDados(
+            @RequestParam(value = "cliente", required = false) Cliente cliente,
+            @RequestParam(value = "endereco", required = false) Endereco endereco,
+            RedirectAttributes attributes) {
         try {
-            clienteService.update(cliente);
+            if (cliente != null) {
+                clienteService.update(cliente);
+            }
+            if (endereco != null) {
+                enderecoService.update(endereco);
+            }
             attributes.addFlashAttribute("successMessage", "Dados alterados.");
         } catch (UsuarioNaoEncontradoException ex) {
             attributes.addFlashAttribute("errorMessage", ex.getMessage());
@@ -66,6 +72,7 @@ public class ClienteController {
         }
         return "redirect:/cliente/dados";
     }
+
 
     @GetMapping(value = "/agendar")
     public ModelAndView agendar(@RequestParam(name = "especialidade", required = false) Long servicoId) {

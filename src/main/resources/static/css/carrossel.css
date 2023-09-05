@@ -4,9 +4,6 @@
 
 }
 
-
-
-
 .tittle-slides{
 
     margin-top: 21px;
@@ -27,6 +24,6 @@
 
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 255, 0.1); /* Sombra azul */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 255, 0.1);
 
 }
