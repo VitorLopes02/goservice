@@ -55,7 +55,7 @@ public class PrestadorController {
     }
 
     @PostMapping(value = "/dados")
-    public String editarDados(Prestador prestador, RedirectAttributes attributes) {
+    public String alterarDados(Prestador prestador, RedirectAttributes attributes) {
         try {
             prestadorService.update(prestador);
             attributes.addFlashAttribute("successMessage", "Dados alterados.");
@@ -67,7 +67,18 @@ public class PrestadorController {
         return "redirect:/prestador/dados";
     }
 
-
+    @PostMapping(value = "/dados/endereco")
+    public String alterarDadosEndereco(Endereco endereco, RedirectAttributes attributes) {
+        try {
+            enderecoService.update(endereco);
+            attributes.addFlashAttribute("successMessage", "Dados alterados.");
+        } catch (UsuarioNaoEncontradoException ex) {
+            attributes.addFlashAttribute("errorMessage", ex.getMessage());
+        } catch (Exception ex) {
+            attributes.addFlashAttribute("errorMessage", "Erro ao alterar dados cadastrais.");
+        }
+        return "redirect:/prestador/dados";
+    }
     @PostMapping(value = "/dados/especialidade/remover")
     public String removerEspecialidade(
             @RequestParam(name = "servicoId") Long id,
