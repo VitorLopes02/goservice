@@ -29,6 +29,10 @@ public class UsuarioService {
         return usuarioRepository.buscarServicosPorNome(nome);
     }
 
+    public List<Usuario> buscarUsuariosPorNome(String nome){
+        return usuarioRepository.buscarUsuariosPorNome(nome);
+    }
+
     public Usuario findByEmail(String email){
         Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
         if (usuario.isPresent()){

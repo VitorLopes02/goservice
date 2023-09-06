@@ -54,6 +54,19 @@
             <div class="card-body">
                 <h5 class="card-title mb-2">Usuários cadastrados</h5>
 
+                <form class="row" method="post" th:action="@{/admin/usuarios/pesquisa}">
+                    <div class="col">
+                        <label for="nome-usuario">Nome do Usuario</label>
+                        <input class="form-control" type="text" name="nome-usuario" id="nome-usuario" required>
+                    </div>
+                    <div class="col d-flex flex-column-reverse">
+                        <button type="submit" class="btn btn-primary align-bottom">Buscar <i class="bi bi-search"></i></button>
+                    </div>
+                    <div class="col d-flex flex-column-reverse">
+                        <a th:href="@{/admin/usuarios}" class="btn btn-secondary align-bottom">Todos os Usuários</a>
+                    </div>
+                </form>
+
                 <table class="table w-100">
                     <thead>
                     <tr>
