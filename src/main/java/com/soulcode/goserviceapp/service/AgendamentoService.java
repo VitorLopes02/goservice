@@ -35,6 +35,10 @@ public class AgendamentoService {
     @Autowired
     private AgendamentoLogService agendamentoLogService;
 
+    public List<Agendamento> totalAgendamentoStatus(){
+        return agendamentoRepository.totalAgendamentoStatus();
+    }
+
     public List<Agendamento> findByData(String dataInicio, String dataFim) {
         return agendamentoRepository.findByData(dataInicio, dataFim);
     }
