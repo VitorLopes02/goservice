@@ -44,6 +44,7 @@ public class ClienteController {
         try {
             Cliente cliente = clienteService.findAuthenticated(authentication);
             mv.addObject("cliente", cliente);
+            mv.addObject("endereco", cliente.getEndereco());
         } catch (UsuarioNaoAutenticadoException | UsuarioNaoEncontradoException ex) {
             mv.addObject("errorMessage", ex.getMessage());
         } catch (Exception ex) {
@@ -53,21 +54,27 @@ public class ClienteController {
     }
 
     @PostMapping(value = "/dados")
-    public String alterarDados(
-            @RequestParam(value = "cliente", required = false) Cliente cliente,
-            @RequestParam(value = "endereco", required = false) Endereco endereco,
-            RedirectAttributes attributes) {
+    public String alterarDados(Cliente cliente, RedirectAttributes attributes) {
         try {
-            if (cliente != null) {
-                clienteService.update(cliente);
-            }
-            if (endereco != null) {
-                enderecoService.update(endereco);
-            }
+            clienteService.update(cliente);
             attributes.addFlashAttribute("successMessage", "Dados alterados.");
         } catch (UsuarioNaoEncontradoException ex) {
             attributes.addFlashAttribute("errorMessage", ex.getMessage());
         } catch (Exception ex) {
+            attributes.addFlashAttribute("errorMessage", "Erro ao alterar dados cadastrais.");
+        }
+        return "redirect:/cliente/dados";
+    }
+
+    @PostMapping(value = "/dados/endereco")
+    public String alterarEndereco(Endereco endereco, RedirectAttributes attributes) {
+        try {
+            enderecoService.update(endereco);
+            attributes.addFlashAttribute("successMessage", "Dados alterados.");
+        } catch (UsuarioNaoEncontradoException ex) {
+            attributes.addFlashAttribute("errorMessage", ex.getMessage());
+        } catch (Exception ex) {
+            ex.printStackTrace();
             attributes.addFlashAttribute("errorMessage", "Erro ao alterar dados cadastrais.");
         }
         return "redirect:/cliente/dados";
