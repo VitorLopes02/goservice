@@ -41,6 +41,7 @@ public class PrestadorController {
         try {
             Prestador prestador = prestadorService.findAuthenticated(authentication);
             mv.addObject("prestador", prestador);
+            mv.addObject("endereco", prestador.getEndereco());
             List<Servico> especialidades = servicoService.findByPrestadorEmail(authentication.getName());
             mv.addObject("especialidades", especialidades);
             List<Servico> servicos = servicoService.findAll();
@@ -54,17 +55,9 @@ public class PrestadorController {
     }
 
     @PostMapping(value = "/dados")
-    public String alterarDados(
-            @RequestParam(value = "prestador", required = false) Prestador prestador,
-            @RequestParam(value = "endereco", required = false) Endereco endereco,
-            RedirectAttributes attributes) {
+    public String editarDados(Prestador prestador, RedirectAttributes attributes) {
         try {
-            if (prestador != null) {
-                prestadorService.update(prestador);
-            }
-            if (endereco != null) {
-                enderecoService.update(endereco);
-            }
+            prestadorService.update(prestador);
             attributes.addFlashAttribute("successMessage", "Dados alterados.");
         } catch (UsuarioNaoEncontradoException ex) {
             attributes.addFlashAttribute("errorMessage", ex.getMessage());
@@ -73,6 +66,7 @@ public class PrestadorController {
         }
         return "redirect:/prestador/dados";
     }
+
 
     @PostMapping(value = "/dados/especialidade/remover")
     public String removerEspecialidade(
